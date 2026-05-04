@@ -1,10 +1,29 @@
 <script lang="ts">
   import type { Achievement } from '$lib/types/achievement';
 
-  let { achievement }: { achievement: Achievement } = $props();
+  let {
+    achievement,
+    selected = false,
+    onclick
+  }: {
+    achievement: Achievement;
+    selected?: boolean;
+    onclick?: () => void;
+  } = $props();
+
+  const statusLabels: Record<Achievement['status'], string> = {
+    received: 'Получено',
+    available: 'Доступно',
+    locked: 'Заблокировано'
+  };
 </script>
 
-<article class="achievement-card achievement-card--{achievement.status}">
+<button
+  class="achievement-card achievement-card--{achievement.status}"
+  class:achievement-card--selected={selected}
+  type="button"
+  {onclick}
+>
   <div class="achievement-card__icon" aria-hidden="true">
     {achievement.icon}
   </div>
@@ -18,16 +37,10 @@
 
     <div class="achievement-card__meta">
       <span>Редкость: {achievement.rarity}%</span>
-      <span>
-        {achievement.status === 'received'
-          ? 'Получено'
-          : achievement.status === 'available'
-            ? 'Доступно'
-            : 'Заблокировано'}
-      </span>
+      <span>{statusLabels[achievement.status]}</span>
     </div>
   </div>
-</article>
+</button>
 
 <style>
   .achievement-card {
@@ -36,6 +49,9 @@
     gap: 18px;
     padding: 18px;
     border: 1px solid rgba(217, 222, 242, 0.08);
+    width: 100%;
+    color: inherit;
+    text-align: left;
     border-radius: 18px;
     background: #1d1f36;
     transition:
@@ -110,6 +126,16 @@
   .achievement-card--locked {
     opacity: 0.58;
     filter: grayscale(0.9);
+  }
+
+  .achievement-card--selected {
+    border-color: rgba(86, 188, 213, 0.72);
+    box-shadow: 0 0 0 3px rgba(86, 188, 213, 0.12);
+  }
+
+  .achievement-card:focus-visible {
+    outline: 3px solid rgba(86, 188, 213, 0.45);
+    outline-offset: 3px;
   }
 
   @media (max-width: 640px) {

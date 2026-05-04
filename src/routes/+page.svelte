@@ -5,6 +5,11 @@
     import AchievementCard from '$lib/components/achievements/AchievementCard.svelte';
     import { achievements } from '$lib/data/achievements';
     import AchievementDetails from '$lib/components/achievements/AchievementDetails.svelte';
+
+    let selectedAchievementId = $state(achievements[0].id);
+    let selectedAchievement = $derived(
+      achievements.find((achievement) => achievement.id === selectedAchievementId) ?? achievements[0]
+    );
 </script>
 
 <svelte:head>
@@ -19,37 +24,49 @@
   <div class="hero-card">
     <Card padding="lg">
       <section class="hero">
-          <p class="hero__label">Система учебных достижений</p>
-          <h1>Вектор успеха</h1>
-          <p class="hero__text">
+        <p class="hero__label">Система учебных достижений</p>
+        <h1>Вектор успеха</h1>
+        <p class="hero__text">
           Веб-приложение для учёта, визуализации и демонстрации учебных достижений
           обучающихся.
-          </p>
-          <div class="hero__actions">
-              <Button>Начать работу</Button>
-              <Button variant="secondary">О системе</Button>
-          </div>
+        </p>
+        <div class="hero__actions">
+          <Button>Начать работу</Button>
+          <Button variant="secondary">О системе</Button>
+        </div>
       </section>
     </Card>
   </div>
-    <section class="achievements-preview">
-        <div class="section-heading">
-            <p>Пример интерфейса</p>
-            <h2>Учебные достижения</h2>
-        </div>
 
-        <div class="achievements-grid">
-            {#each achievements as achievement}
-            <AchievementCard {achievement} />
-            {/each}
-        </div>
-    </section>
-    <AchievementDetails achievement={achievements[2]} />
+  <section class="achievements-preview">
+    <div class="section-heading">
+      <p>Пример интерфейса</p>
+      <h2>Учебные достижения</h2>
+    </div>
+
+    <div class="achievements-grid">
+      {#each achievements as achievement}
+        <AchievementCard
+          {achievement}
+          selected={achievement.id === selectedAchievementId}
+          onclick={() => {
+            selectedAchievementId = achievement.id;
+          }}
+        />
+      {/each}
+    </div>
+  </section>
+
+  <AchievementDetails achievement={selectedAchievement} />
 </PageShell>
 
 <style>
+  .hero-card {
+    max-width: 760px;
+  }
+
   .hero {
-    max-width: 680px;
+    width: 100%;
   }
 
   .hero__label {
@@ -76,64 +93,50 @@
     line-height: 1.5;
   }
 
-  .hero-card {
-    max-width: 760px;
+  .hero__actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 12px;
+    margin-top: 32px;
   }
 
   .achievements-preview {
-  max-width: 1100px;
-  margin-top: 32px;
-}
-
-.section-heading {
-  margin-bottom: 18px;
-}
-
-.section-heading p {
-  margin: 0 0 8px;
-  color: #56bcd5;
-  font-size: 12px;
-  font-weight: 700;
-  letter-spacing: 0.08em;
-  text-transform: uppercase;
-}
-
-.section-heading h2 {
-  margin: 0;
-  color: #d9def2;
-  font-size: 28px;
-}
-
-.achievements-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(280px, 360px));
-  gap: 16px;
-}
-
-@media (max-width: 1000px) {
-  .achievements-grid {
-    grid-template-columns: 1fr;
+    max-width: 1100px;
+    margin-top: 32px;
   }
-}
+
+  .section-heading {
+    margin-bottom: 18px;
+  }
+
+  .section-heading p {
+    margin: 0 0 8px;
+    color: #56bcd5;
+    font-size: 12px;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+  }
+
+  .section-heading h2 {
+    margin: 0;
+    color: #d9def2;
+    font-size: 28px;
+  }
+
+  .achievements-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 360px));
+    gap: 16px;
+  }
 
   @media (max-width: 768px) {
-    .hero {
-        padding: 28px;
-    }
-
     h1 {
-        font-size: 40px;
+      font-size: 40px;
     }
 
     .hero__text {
-        font-size: 16px;
-    }
-    .hero__actions {
-        display: flex;
-        flex-wrap: wrap;
-        gap: 12px;
-        margin-top: 32px;
+      font-size: 16px;
     }
   }
-
 </style>
