@@ -84,17 +84,6 @@
     line-height: 1.45;
   }
 
-  .achievement-card__level {
-    flex: 0 0 auto;
-    padding: 4px 8px;
-    border-radius: 999px;
-    background: rgba(86, 188, 213, 0.12);
-    color: #56bcd5;
-    font-size: 11px;
-    font-weight: 700;
-    text-transform: uppercase;
-  }
-
   .achievement-card__meta {
     display: flex;
     flex-wrap: wrap;

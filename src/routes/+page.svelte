@@ -4,6 +4,7 @@
     import Card from '$lib/components/ui/Card.svelte';
     import AchievementCard from '$lib/components/achievements/AchievementCard.svelte';
     import { achievements } from '$lib/data/achievements';
+    import AchievementDetails from '$lib/components/achievements/AchievementDetails.svelte';
 </script>
 
 <svelte:head>
@@ -15,20 +16,22 @@
 </svelte:head>
 
 <PageShell>
-  <Card padding="lg">
-    <section class="hero">
-        <p class="hero__label">Система учебных достижений</p>
-        <h1>Вектор успеха</h1>
-        <p class="hero__text">
-        Веб-приложение для учёта, визуализации и демонстрации учебных достижений
-        обучающихся.
-        </p>
-        <div class="hero__actions">
-            <Button>Начать работу</Button>
-            <Button variant="secondary">О системе</Button>
-        </div>
-        </section>
+  <div class="hero-card">
+    <Card padding="lg">
+      <section class="hero">
+          <p class="hero__label">Система учебных достижений</p>
+          <h1>Вектор успеха</h1>
+          <p class="hero__text">
+          Веб-приложение для учёта, визуализации и демонстрации учебных достижений
+          обучающихся.
+          </p>
+          <div class="hero__actions">
+              <Button>Начать работу</Button>
+              <Button variant="secondary">О системе</Button>
+          </div>
+      </section>
     </Card>
+  </div>
     <section class="achievements-preview">
         <div class="section-heading">
             <p>Пример интерфейса</p>
@@ -41,12 +44,13 @@
             {/each}
         </div>
     </section>
+    <AchievementDetails achievement={achievements[2]} />
 </PageShell>
 
 <style>
-    .hero {
-        max-width: 680px;
-    }
+  .hero {
+    max-width: 680px;
+  }
 
   .hero__label {
     margin: 0 0 16px;
@@ -70,6 +74,10 @@
     color: #9e9ec2;
     font-size: 20px;
     line-height: 1.5;
+  }
+
+  .hero-card {
+    max-width: 760px;
   }
 
   .achievements-preview {
@@ -98,7 +106,7 @@
 
 .achievements-grid {
   display: grid;
-  grid-template-columns: repeat(3, minmax(0, 1fr));
+  grid-template-columns: repeat(auto-fit, minmax(280px, 360px));
   gap: 16px;
 }
 
