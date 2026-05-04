@@ -1,6 +1,7 @@
 <script lang="ts">
   import PageShell from '$lib/components/layout/PageShell.svelte';
   import Button from '$lib/components/ui/Button.svelte';
+  import Card from '$lib/components/ui/Card.svelte';
 </script>
 
 <svelte:head>
