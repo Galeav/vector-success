@@ -6,15 +6,15 @@ export const cohorts: Cohort[] = [
     name: 'Математика 6б',
     description: 'Достижения за успешное освоение модулей в программе и предметные олимпиады',
     membersCount: 28,
-    achievementsCount: 12,
-    progress: 58
+    achievementsCount: 4,
+    progress: 25
   },
   {
     id: 'My-class',
     name: 'Весёлый 6б',
     description: 'Когорта для фиксации личного вклада в жизнь школы и класса',
-    membersCount: 16,
-    achievementsCount: 9,
-    progress: 34
+    membersCount: 28,
+    achievementsCount: 12,
+    progress: 50
   }
 ];

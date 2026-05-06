@@ -42,7 +42,6 @@
 
   <section class="cohorts-preview">
   <div class="section-heading">
-    <p>Рабочие группы</p>
     <h2>Мои когорты</h2>
   </div>
 
@@ -55,7 +54,6 @@
 
   <section class="achievements-preview">
     <div class="section-heading">
-      <p>Пример интерфейса</p>
       <h2>Учебные достижения</h2>
     </div>
 
