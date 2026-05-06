@@ -1,4 +1,4 @@
-export type AchievementStatus = 'received' | 'available' | 'locked';
+export type AchievementStatus = "received" | "available" | "locked";
 
 export type Achievement = {
   id: number;

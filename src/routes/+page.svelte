@@ -33,7 +33,10 @@
           обучающихся.
         </p>
         <div class="hero__actions">
-          <Button>Начать работу</Button>
+          <a href="/cohorts">
+            <Button>Начать работу</Button>
+          </a>
+
           <Button variant="secondary">О системе</Button>
         </div>
       </section>
