@@ -12,7 +12,7 @@
 
 <section class="achievement-details">
   <div class="achievement-details__icon" aria-hidden="true">
-    {achievement.icon}
+    <img src={achievement.icon} alt="" />
   </div>
 
   <div class="achievement-details__content">
@@ -125,6 +125,11 @@
     color: #d9def2;
     font-size: 14px;
     line-height: 1.45;
+  }
+  .achievement-details__icon img {
+    width: 100px;
+    height: 100px;
+    object-fit: contain;
   }
 
   @media (max-width: 720px) {

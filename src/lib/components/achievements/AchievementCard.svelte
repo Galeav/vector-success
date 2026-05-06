@@ -14,7 +14,7 @@
   const statusLabels: Record<Achievement['status'], string> = {
     received: 'Получено',
     available: 'Доступно',
-    locked: 'Заблокировано'
+    locked: 'Пока не доступно'/*Пока не знаю буду использовать или нет, но была идея с блокировкой зависимого достижения*/
   };
 </script>
 
@@ -25,7 +25,7 @@
   {onclick}
 >
   <div class="achievement-card__icon" aria-hidden="true">
-    {achievement.icon}
+    <img src={achievement.icon} alt="" />
   </div>
 
   <div class="achievement-card__content">
@@ -136,6 +136,12 @@
   .achievement-card:focus-visible {
     outline: 3px solid rgba(86, 188, 213, 0.45);
     outline-offset: 3px;
+  }
+
+  .achievement-card__icon img {
+    width: 75px;
+    height: 75px;
+    object-fit: contain;
   }
 
   @media (max-width: 640px) {

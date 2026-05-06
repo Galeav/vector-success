@@ -5,6 +5,8 @@
     import AchievementCard from '$lib/components/achievements/AchievementCard.svelte';
     import { achievements } from '$lib/data/achievements';
     import AchievementDetails from '$lib/components/achievements/AchievementDetails.svelte';
+    import CohortCard from '$lib/components/cohorts/CohortCard.svelte';
+    import { cohorts } from '$lib/data/cohorts';
 
     let selectedAchievementId = $state(achievements[0].id);
     let selectedAchievement = $derived(
@@ -37,6 +39,19 @@
       </section>
     </Card>
   </div>
+
+  <section class="cohorts-preview">
+  <div class="section-heading">
+    <p>Рабочие группы</p>
+    <h2>Мои когорты</h2>
+  </div>
+
+  <div class="cohorts-grid">
+    {#each cohorts as cohort}
+      <CohortCard {cohort} />
+    {/each}
+  </div>
+</section>
 
   <section class="achievements-preview">
     <div class="section-heading">
@@ -129,6 +144,17 @@
     grid-template-columns: repeat(auto-fit, minmax(280px, 360px));
     gap: 16px;
   }
+
+  .cohorts-preview {
+  max-width: 900px;
+  margin-top: 32px;
+}
+
+.cohorts-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 16px;
+}
 
   @media (max-width: 768px) {
     h1 {
