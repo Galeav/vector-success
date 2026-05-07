@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="40 40 200 175" role="img" aria-label="Вектор Успеха">
+  <title>Вектор Успеха</title>
+  <desc>Иконка "Вектор Успеха": восходящая ломаная линия со звездой на вершине.</desc>
+
+  <line x1="50" y1="195" x2="232" y2="195" stroke="#cbd5e1" stroke-width="2" stroke-linecap="round" stroke-dasharray="2 6"/>
+
+  <polyline points="65,180 110,150 155,115 200,73" fill="none" stroke="#2563eb" stroke-width="14" stroke-linecap="round" stroke-linejoin="round"/>
+
+  <polygon points="200,48 206.47,64.10 223.78,65.27 210.46,76.40 214.69,93.23 200,84 185.31,93.23 189.54,76.40 176.22,65.27 193.53,64.10" fill="#f59e0b"/>
+</svg>

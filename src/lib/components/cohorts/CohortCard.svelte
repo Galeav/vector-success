@@ -4,7 +4,7 @@
   let { cohort }: { cohort: Cohort } = $props();
 </script>
 
-<article class="cohort-card">
+<a class="cohort-card" href={`/cohorts/${cohort.id}`}>
   <div class="cohort-card__top">
     <div>
       <p class="cohort-card__label">Когорта</p>
@@ -24,7 +24,7 @@
     <span>{cohort.membersCount} участников</span>
     <span>{cohort.achievementsCount} достижений</span>
   </div>
-</article>
+</a>
 
 <style>
   .cohort-card {
@@ -32,6 +32,22 @@
     border: 1px solid rgba(217, 222, 242, 0.08);
     border-radius: 18px;
     background: #1d1f36;
+    display: block;
+    color: inherit;
+    text-decoration: none;
+    transition:
+        transform 0.16s ease,
+        border-color 0.16s ease;
+  }
+
+  .cohort-card:hover {
+    transform: translateY(-2px);
+    border-color: rgba(86, 188, 213, 0.32);
+  }
+
+  .cohort-card:focus-visible {
+      outline: 3px solid rgba(86, 188, 213, 0.45);
+      outline-offset: 3px;
   }
 
   .cohort-card__top {
