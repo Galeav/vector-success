@@ -21,8 +21,9 @@
         <a class:active={isActive('/cohorts')} href="/cohorts">Когорты</a>
     </nav>
 
-    <div class="app-header__user">
-        <span>Иванов Иван Иванович</span>
+    <div class="app-header__auth">
+        <a href="/login">Войти</a>
+        <a class="app-header__auth-link--accent" href="/register">Регистрация</a>
     </div>
 </header>
 
@@ -92,13 +93,36 @@
         outline-offset: 3px;
     }
 
-    .app-header__user {
-        padding: 8px 12px;
-        border-radius: 999px;
-        background: rgba(217, 222, 242, 0.06);
+    .app-header__auth {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+    }
+
+    .app-header__auth a {
+        padding: 9px 12px;
+        border-radius: 10px;
         color: #9e9ec2;
         font-size: 13px;
-        font-weight: 700;
+        font-weight: 800;
+        transition:
+            background 0.16s ease,
+            color 0.16s ease;
+    }
+
+    .app-header__auth a:hover {
+        background: rgba(217, 222, 242, 0.06);
+        color: #d9def2;
+    }
+
+    .app-header__auth a:focus-visible {
+        outline: 3px solid rgba(86, 188, 213, 0.45);
+        outline-offset: 3px;
+    }
+
+    .app-header__auth-link--accent {
+        background: rgba(86, 188, 213, 0.12);
+        color: #56bcd5 !important;
     }
 
     @media (max-width: 720px) {
@@ -112,8 +136,8 @@
             width: 100%;
         }
 
-        .app-header__user {
-            display: none;
-        }
+    .app-header__auth {
+        display: none;
+    }
     }
 </style>
