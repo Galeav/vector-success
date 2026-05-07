@@ -18,11 +18,12 @@
 
     const cohort = cohorts.find((item) => item.id === params.id) ?? cohorts[0];
 
-    let selectedAchievementId = $state(visibleAchievements[0].id);
+    let selectedAchievementId = $state<number | null>(achievements[0]?.id ?? null);
 
     let selectedAchievement = $derived(
         visibleAchievements.find((achievement) => achievement.id === selectedAchievementId) ??
-            visibleAchievements[0]
+            visibleAchievements[0] ??
+            null
     );
 
     function handleCreateAchievement(
@@ -111,7 +112,10 @@
             </div>
         </section>
 
+    {#if selectedAchievement}
         <AchievementDetails achievement={selectedAchievement} />
+    {/if}
+    
     </section>
 
     {#if isCreateAchievementModalOpen}
