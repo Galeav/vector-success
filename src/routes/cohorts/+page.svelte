@@ -8,6 +8,14 @@
     import Modal from '$lib/components/ui/Modal.svelte';
     import FormMessage from '$lib/components/ui/FormMessage.svelte';
     import type { Cohort } from '$lib/types/cohort';
+    import { getCurrentUserRole } from '$lib/stores/user';
+    import type { UserRole } from '$lib/types/user';
+
+    let currentRole = $state<UserRole>('student');
+
+    $effect(() => {
+        currentRole = getCurrentUserRole();
+    });
 
     let isCreateModalOpen = $state(false);
     let createMessage = $state('');
@@ -88,13 +96,23 @@
                 </p>
             </div>
 
-            <Button
-                onclick={() => {
-                    isCreateModalOpen = true;
-                }}
-            >
-                Создать когорту
-            </Button>
+            {#if currentRole === 'teacher'}
+                <Button
+                    onclick={() => {
+                        isCreateModalOpen = true;
+                    }}
+                >
+                    Создать когорту
+                </Button>
+            {/if}
+        </div>
+
+        <div class="role-info">
+            {#if currentRole === 'teacher'}
+                <p>Вы работаете в режиме преподавателя: можете создавать когорты и управлять учебными достижениями.</p>
+            {:else}
+                <p>Вы работаете в режиме обучающегося: можете присоединяться к когортам и отслеживать свои достижения.</p>
+            {/if}
         </div>
 
         {#if createMessage}
@@ -105,7 +123,9 @@
             </div>
         {/if}        
 
-        <JoinCohortForm />
+        {#if currentRole === 'student'}
+            <JoinCohortForm />
+        {/if}
 
         <div class="cohorts-grid">
             {#each visibleCohorts as cohort}
@@ -173,6 +193,22 @@
     .cohorts-page__message {
         max-width: 720px;
         margin-bottom: 16px;
+    }
+
+    .role-info {
+        max-width: 720px;
+        margin-bottom: 16px;
+        padding: 14px 16px;
+        border: 1px solid rgba(86, 188, 213, 0.18);
+        border-radius: 14px;
+        background: rgba(86, 188, 213, 0.08);
+    }
+
+    .role-info p {
+        margin: 0;
+        color: #d9def2;
+        font-size: 14px;
+        line-height: 1.45;
     }
 
     @media (max-width: 720px) {

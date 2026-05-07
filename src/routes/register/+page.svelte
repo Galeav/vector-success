@@ -4,6 +4,7 @@
     import FormMessage from '$lib/components/ui/FormMessage.svelte';
     import Input from '$lib/components/ui/Input.svelte';
     import AuthCard from '$lib/components/auth/AuthCard.svelte';
+    import { saveCurrentUser } from '$lib/stores/user';
 
     let fullName = $state('');
     let email = $state('');
@@ -43,14 +44,20 @@
             return;
         }
 
-        message = `Пользователь «${normalizedFullName}» успешно зарегистрирован.`;
-        messageType = 'success';
+    saveCurrentUser({
+        fullName: normalizedFullName,
+        email: normalizedEmail,
+        role
+    });
 
-        fullName = '';
-        email = '';
-        password = '';
-        role = 'student';
-    }
+    message = `Пользователь «${normalizedFullName}» успешно зарегистрирован.`;
+    messageType = 'success';
+
+    fullName = '';
+    email = '';
+    password = '';
+    role = 'student';
+        }
 </script>
 
 <svelte:head>
