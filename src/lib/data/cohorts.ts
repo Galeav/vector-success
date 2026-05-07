@@ -7,7 +7,8 @@ export const cohorts: Cohort[] = [
         description: 'Достижения за успешное освоение модулей в программе и предметные олимпиады',
         membersCount: 28,
         achievementsCount: 4,
-        progress: 25
+        progress: 25,
+        inviteKey: 'math-6B-2026'
     },
     {
         id: 'My-class',
@@ -15,6 +16,7 @@ export const cohorts: Cohort[] = [
         description: 'Когорта для фиксации личного вклада в жизнь школы и класса',
         membersCount: 28,
         achievementsCount: 12,
-        progress: 50
+        progress: 50,
+        inviteKey: 'CLASS-6B-2026'
     }
 ];

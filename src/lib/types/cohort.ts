@@ -5,4 +5,5 @@ export type Cohort = {
     membersCount: number;
     achievementsCount: number;
     progress: number;
+    inviteKey: string;
 };

@@ -11,6 +11,7 @@
     import type { Achievement } from '$lib/types/achievement';
     import { getCurrentUserRole } from '$lib/stores/user';
     import type { UserRole } from '$lib/types/user';
+    import InviteKeyPanel from '$lib/components/cohorts/InviteKeyPanel.svelte';
 
     let visibleAchievements = $state<Achievement[]>([...achievements]);
     let isCreateAchievementModalOpen = $state(false);
@@ -19,6 +20,12 @@
     let { params } = $props();
 
     const cohort = cohorts.find((item) => item.id === params.id) ?? cohorts[0];
+
+    let inviteKey = $state(cohort.inviteKey);
+
+    function regenerateInviteKey() {
+        inviteKey = `${cohort.id.toUpperCase()}-${Math.floor(1000 + Math.random() * 9000)}`;
+    }
 
     let selectedAchievementId = $state<number | null>(achievements[0]?.id ?? null);
 
@@ -94,6 +101,10 @@
                 <p>прогресс</p>
             </div>
         </div>
+
+        {#if currentRole === 'teacher'}
+            <InviteKeyPanel inviteKey={inviteKey} onregenerate={regenerateInviteKey} />
+        {/if}
 
         <div class="role-info">
             {#if currentRole === 'teacher'}

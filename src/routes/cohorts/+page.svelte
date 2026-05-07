@@ -29,7 +29,8 @@
             description: 'Новая когорта для учёта и демонстрации учебных достижений.',
             membersCount: 0,
             achievementsCount: 0,
-            progress: 0
+            progress: 0,
+            inviteKey: createInviteKey(name)
         };
 
         visibleCohorts = [newCohort, ...visibleCohorts];
@@ -76,6 +77,12 @@
         .replaceAll('б', 'b')
         .replaceAll('ю', 'yu')
         .replace(/[^a-z0-9-]/g, '');
+    }
+
+    function createInviteKey(name: string) {
+        const prefix = createCohortId(name).slice(0, 8).toUpperCase();
+
+        return `${prefix}-2026`;
     }
 
 </script>
