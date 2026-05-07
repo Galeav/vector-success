@@ -1,4 +1,8 @@
 <script lang="ts">
+    import Button from '$lib/components/ui/Button.svelte';
+    import FormMessage from '$lib/components/ui/FormMessage.svelte';
+    import Input from '$lib/components/ui/Input.svelte';
+
     let inviteKey = $state('');
     let message = $state('');
     let messageType = $state<'success' | 'error' | ''>('');
@@ -35,20 +39,20 @@
     </div>
 
     <div class="join-form__row">
-        <input
+        <Input
             id="invite-key"
             bind:value={inviteKey}
             placeholder="Например, CLASS-6B-2026"
             autocomplete="off"
         />
 
-        <button type="submit">Присоединиться</button>
+        <Button type="submit">Присоединиться</Button>
     </div>
 
-    {#if message}
-        <p class:success={messageType === 'success'} class:error={messageType === 'error'}>
+    {#if message && messageType}
+        <FormMessage type={messageType}>
             {message}
-        </p>
+        </FormMessage>
     {/if}
 </form>
 
@@ -81,62 +85,6 @@
         display: grid;
         grid-template-columns: 1fr auto;
         gap: 12px;
-    }
-
-    input {
-        min-height: 44px;
-        width: 100%;
-        border: 1px solid rgba(217, 222, 242, 0.12);
-        border-radius: 10px;
-        background: #1b1d36;
-        color: #d9def2;
-        padding: 0 14px;
-        outline: none;
-    }
-
-    input::placeholder {
-        color: #7e8499;
-    }
-
-    input:focus {
-        border-color: rgba(86, 188, 213, 0.72);
-        box-shadow: 0 0 0 3px rgba(86, 188, 213, 0.12);
-    }
-
-    button {
-        min-height: 44px;
-        padding: 0 20px;
-        border: none;
-        border-radius: 10px;
-        background: linear-gradient(90deg, #7b54eb, #4baee9);
-        color: #ffffff;
-        font-size: 14px;
-        font-weight: 800;
-        cursor: pointer;
-    }
-
-    button:focus-visible {
-        outline: 3px solid rgba(86, 188, 213, 0.45);
-        outline-offset: 3px;
-    }
-
-    .success,
-    .error {
-        margin: 0;
-        padding: 12px 14px;
-        border-radius: 12px;
-        font-size: 14px;
-        font-weight: 700;
-    }
-
-    .success {
-        background: #0a2224;
-        color: #56bcd5;
-    }
-
-    .error {
-        background: rgba(255, 91, 91, 0.12);
-        color: #ff8b8b;
     }
 
     @media (max-width: 720px) {

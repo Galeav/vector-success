@@ -5,16 +5,18 @@
         children,
         variant = 'primary',
         type = 'button',
-        disabled = false
+        disabled = false,
+        onclick
     }: {
         children: import('svelte').Snippet;
         variant?: ButtonVariant;
         type?: 'button' | 'submit' | 'reset';
         disabled?: boolean;
+        onclick?: () => void;
     } = $props();
 </script>
 
-<button class="button button--{variant}" {type} {disabled}>
+<button class="button button--{variant}" {type} {disabled} {onclick}>
     {@render children()}
 </button>
 

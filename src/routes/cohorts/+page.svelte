@@ -4,6 +4,17 @@
     import Button from '$lib/components/ui/Button.svelte';
     import { cohorts } from '$lib/data/cohorts';
     import JoinCohortForm from '$lib/components/cohorts/JoinCohortForm.svelte';
+    import CreateCohortForm from '$lib/components/cohorts/CreateCohortForm.svelte';
+    import Modal from '$lib/components/ui/Modal.svelte';
+    import FormMessage from '$lib/components/ui/FormMessage.svelte';
+
+    let isCreateModalOpen = $state(false);
+    let createMessage = $state('');
+
+    function handleCreateCohort(name: string) {
+        createMessage = `Когорта «${name}» создана.`;
+        isCreateModalOpen = false;
+}
 </script>
 
 <svelte:head>
@@ -22,8 +33,22 @@
                 </p>
             </div>
 
-            <Button>Создать когорту</Button>
+            <Button
+                onclick={() => {
+                    isCreateModalOpen = true;
+                }}
+            >
+                Создать когорту
+            </Button>
         </div>
+
+        {#if createMessage}
+            <div class="cohorts-page__message">
+                <FormMessage type="success">
+                    {createMessage}
+                </FormMessage>
+            </div>
+        {/if}        
 
         <JoinCohortForm />
 
@@ -33,6 +58,18 @@
             {/each}
         </div>
     </section>
+
+    {#if isCreateModalOpen}
+        <Modal
+            title="Создание когорты"
+            onclose={() => {
+                isCreateModalOpen = false;
+            }}
+        >
+            <CreateCohortForm oncreated={handleCreateCohort} />
+        </Modal>
+    {/if}
+
 </PageShell>
 
 <style>
@@ -76,6 +113,11 @@
         display: grid;
         grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
         gap: 16px;
+    }
+
+    .cohorts-page__message {
+        max-width: 720px;
+        margin-bottom: 16px;
     }
 
     @media (max-width: 720px) {
