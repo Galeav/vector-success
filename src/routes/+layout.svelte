@@ -1,7 +1,10 @@
 <script lang="ts">
-  import '../app.css';
+    import AppHeader from '$lib/components/layout/AppHeader.svelte';
+    import '../app.css';
 
-  let { children } = $props();
+    let { children } = $props();
 </script>
+
+<AppHeader />
 
 {@render children()}
