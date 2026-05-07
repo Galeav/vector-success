@@ -5,17 +5,41 @@
     import Button from '$lib/components/ui/Button.svelte';
     import { achievements } from '$lib/data/achievements';
     import { cohorts } from '$lib/data/cohorts';
+    import CreateAchievementForm from '$lib/components/achievements/CreateAchievementForm.svelte';
+    import Modal from '$lib/components/ui/Modal.svelte';
+    import FormMessage from '$lib/components/ui/FormMessage.svelte';
+    import type { Achievement } from '$lib/types/achievement';
+
+    let visibleAchievements = $state<Achievement[]>([...achievements]);
+    let isCreateAchievementModalOpen = $state(false);
+    let createAchievementMessage = $state('');
 
     let { params } = $props();
 
     const cohort = cohorts.find((item) => item.id === params.id) ?? cohorts[0];
 
-    let selectedAchievementId = $state(achievements[0].id);
+    let selectedAchievementId = $state(visibleAchievements[0].id);
 
     let selectedAchievement = $derived(
-        achievements.find((achievement) => achievement.id === selectedAchievementId) ??
-            achievements[0]
+        visibleAchievements.find((achievement) => achievement.id === selectedAchievementId) ??
+            visibleAchievements[0]
     );
+
+    function handleCreateAchievement(
+    achievementData: Omit<Achievement, 'id' | 'status' | 'rarity'>
+) {
+    const newAchievement: Achievement = {
+        id: Date.now(),
+        ...achievementData,
+        status: 'available',
+        rarity: 0
+    };
+
+    visibleAchievements = [newAchievement, ...visibleAchievements];
+    selectedAchievementId = newAchievement.id;
+    createAchievementMessage = `Достижение «${newAchievement.title}» создано.`;
+    isCreateAchievementModalOpen = false;
+}
 </script>
 
 <svelte:head>
@@ -34,7 +58,13 @@
                 <p class="page-heading__text">{cohort.description}</p>
             </div>
 
-            <Button>Создать достижение</Button>
+            <Button
+                onclick={() => {
+                    isCreateAchievementModalOpen = true;
+                }}
+            >
+                Создать достижение
+            </Button>
         </div>
 
         <div class="stats">
@@ -54,6 +84,14 @@
             </div>
         </div>
 
+        {#if createAchievementMessage}
+            <div class="cohort-page__message">
+                <FormMessage type="success">
+                    {createAchievementMessage}
+                </FormMessage>
+            </div>
+        {/if}
+
         <section class="achievements-section">
             <div class="section-heading">
                 <p>Учебный прогресс</p>
@@ -61,7 +99,7 @@
             </div>
 
             <div class="achievements-grid">
-                {#each achievements as achievement}
+                {#each visibleAchievements as achievement}
                     <AchievementCard
                         {achievement}
                         selected={achievement.id === selectedAchievementId}
@@ -75,6 +113,17 @@
 
         <AchievementDetails achievement={selectedAchievement} />
     </section>
+
+    {#if isCreateAchievementModalOpen}
+        <Modal
+            title="Создание достижения"
+            onclose={() => {
+                isCreateAchievementModalOpen = false;
+            }}
+        >
+            <CreateAchievementForm oncreated={handleCreateAchievement} />
+        </Modal>
+    {/if}
 </PageShell>
 
 <style>
@@ -175,6 +224,11 @@
         display: grid;
         grid-template-columns: repeat(auto-fit, minmax(280px, 360px));
         gap: 16px;
+    }
+
+    .cohort-page__message {
+        max-width: 720px;
+        margin-bottom: 24px;
     }
 
     @media (max-width: 720px) {
