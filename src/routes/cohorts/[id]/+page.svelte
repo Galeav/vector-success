@@ -12,6 +12,8 @@
     import { getCurrentUserRole } from '$lib/stores/user';
     import type { UserRole } from '$lib/types/user';
     import InviteKeyPanel from '$lib/components/cohorts/InviteKeyPanel.svelte';
+    import MemberCard from '$lib/components/cohorts/MemberCard.svelte';
+    import { members } from '$lib/data/members';
 
     let visibleAchievements = $state<Achievement[]>([...achievements]);
     let isCreateAchievementModalOpen = $state(false);
@@ -119,6 +121,21 @@
                 </p>
             {/if}
         </div>
+
+        {#if currentRole === 'teacher'}
+            <section class="members-section">
+                <div class="section-heading">
+                    <p>Состав когорты</p>
+                    <h2>Участники</h2>
+                </div>
+
+                <div class="members-grid">
+                    {#each members as member}
+                        <MemberCard {member} />
+                    {/each}
+                </div>
+            </section>
+        {/if}
 
         {#if createAchievementMessage}
             <div class="cohort-page__message">
@@ -284,6 +301,16 @@
         color: #d9def2;
         font-size: 14px;
         line-height: 1.45;
+    }
+
+    .members-section {
+        margin-top: 32px;
+    }
+
+    .members-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+        gap: 16px;
     }
 
     @media (max-width: 720px) {
