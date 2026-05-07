@@ -1,8 +1,8 @@
 export type Cohort = {
-  id: string;
-  name: string;
-  description: string;
-  membersCount: number;
-  achievementsCount: number;
-  progress: number;
+    id: string;
+    name: string;
+    description: string;
+    membersCount: number;
+    achievementsCount: number;
+    progress: number;
 };
