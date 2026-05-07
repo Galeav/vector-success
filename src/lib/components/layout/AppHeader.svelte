@@ -22,7 +22,7 @@
     </nav>
 
     <div class="app-header__user">
-        <span>Демо-пользователь</span>
+        <span>Иванов Иван Иванович</span>
     </div>
 </header>
 

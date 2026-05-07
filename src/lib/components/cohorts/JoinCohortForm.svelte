@@ -31,9 +31,7 @@
 <form class="join-form" onsubmit={handleSubmit}>
     <div>
         <label for="invite-key">Ключ приглашения</label>
-        <p class="join-form__hint">
-            Введите ключ, полученный от преподавателя.
-        </p>
+        <p class="join-form__hint">Введите ключ, полученный от преподавателя.</p>
     </div>
 
     <div class="join-form__row">

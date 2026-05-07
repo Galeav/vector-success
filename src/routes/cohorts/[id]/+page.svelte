@@ -13,7 +13,8 @@
     let selectedAchievementId = $state(achievements[0].id);
 
     let selectedAchievement = $derived(
-        achievements.find((achievement) => achievement.id === selectedAchievementId) ?? achievements[0]
+        achievements.find((achievement) => achievement.id === selectedAchievementId) ??
+            achievements[0]
     );
 </script>
 
