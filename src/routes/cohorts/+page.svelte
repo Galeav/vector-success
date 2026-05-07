@@ -3,6 +3,7 @@
   import PageShell from '$lib/components/layout/PageShell.svelte';
   import Button from '$lib/components/ui/Button.svelte';
   import { cohorts } from '$lib/data/cohorts';
+  import JoinCohortForm from '$lib/components/cohorts/JoinCohortForm.svelte';
 </script>
 
 <svelte:head>
@@ -27,6 +28,8 @@
       <Button>Создать когорту</Button>
     </div>
 
+    <JoinCohortForm />
+    
     <div class="cohorts-grid">
       {#each cohorts as cohort}
         <CohortCard {cohort} />
