@@ -9,6 +9,8 @@
     import Modal from '$lib/components/ui/Modal.svelte';
     import FormMessage from '$lib/components/ui/FormMessage.svelte';
     import type { Achievement } from '$lib/types/achievement';
+    import { getCurrentUserRole } from '$lib/stores/user';
+    import type { UserRole } from '$lib/types/user';
 
     let visibleAchievements = $state<Achievement[]>([...achievements]);
     let isCreateAchievementModalOpen = $state(false);
@@ -25,6 +27,12 @@
             visibleAchievements[0] ??
             null
     );
+
+    let currentRole = $state<UserRole>('student');
+
+    $effect(() => {
+        currentRole = getCurrentUserRole();
+    });
 
     function handleCreateAchievement(
     achievementData: Omit<Achievement, 'id' | 'status' | 'rarity'>
@@ -59,13 +67,15 @@
                 <p class="page-heading__text">{cohort.description}</p>
             </div>
 
-            <Button
-                onclick={() => {
-                    isCreateAchievementModalOpen = true;
-                }}
-            >
-                Создать достижение
-            </Button>
+            {#if currentRole === 'teacher'}
+                <Button
+                    onclick={() => {
+                        isCreateAchievementModalOpen = true;
+                    }}
+                >
+                    Создать достижение
+                </Button>
+            {/if}
         </div>
 
         <div class="stats">
@@ -83,6 +93,20 @@
                 <span>{cohort.progress}%</span>
                 <p>прогресс</p>
             </div>
+        </div>
+
+        <div class="role-info">
+            {#if currentRole === 'teacher'}
+                <p>
+                    Вы работаете в режиме преподавателя: можете создавать достижения и управлять
+                    учебным прогрессом обучающихся.
+                </p>
+            {:else}
+                <p>
+                    Вы работаете в режиме обучающегося: можете просматривать доступные и полученные
+                    достижения, условия их получения и собственный прогресс.
+                </p>
+            {/if}
         </div>
 
         {#if createAchievementMessage}
@@ -115,10 +139,10 @@
     {#if selectedAchievement}
         <AchievementDetails achievement={selectedAchievement} />
     {/if}
-    
+
     </section>
 
-    {#if isCreateAchievementModalOpen}
+    {#if isCreateAchievementModalOpen && currentRole === 'teacher'}
         <Modal
             title="Создание достижения"
             onclose={() => {
@@ -233,6 +257,22 @@
     .cohort-page__message {
         max-width: 720px;
         margin-bottom: 24px;
+    }
+
+    .role-info {
+        max-width: 760px;
+        margin-bottom: 24px;
+        padding: 14px 16px;
+        border: 1px solid rgba(86, 188, 213, 0.18);
+        border-radius: 14px;
+        background: rgba(86, 188, 213, 0.08);
+    }
+
+    .role-info p {
+        margin: 0;
+        color: #d9def2;
+        font-size: 14px;
+        line-height: 1.45;
     }
 
     @media (max-width: 720px) {
