@@ -37,7 +37,7 @@
         createMessage = `Когорта «${name}» создана.`;
         isCreateModalOpen = false;
     }
-    /*Это я для проверки, пока бекэнд не подключен*/
+    /*Для проверки, пока бекэнд не подключен*/
     function createCohortId(name: string) {
     return name
         .trim()

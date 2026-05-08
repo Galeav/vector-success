@@ -126,15 +126,6 @@
         margin-bottom: 18px;
     }
 
-    .section-heading p {
-        margin: 0 0 8px;
-        color: #56bcd5;
-        font-size: 12px;
-        font-weight: 700;
-        letter-spacing: 0.08em;
-        text-transform: uppercase;
-    }
-
     .section-heading h2 {
         margin: 0;
         color: #d9def2;

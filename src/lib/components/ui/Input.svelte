@@ -10,7 +10,7 @@
         value?: string;
         type?: 'text' | 'password' | 'email';
         placeholder?: string;
-        autocomplete?: string;
+        autocomplete?: HTMLInputElement['autocomplete'];
     } = $props();
 </script>
 
