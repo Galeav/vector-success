@@ -1,5 +1,9 @@
 <script lang="ts">
     import { page } from '$app/state';
+    import { clearCurrentUser, getCurrentUser, USER_CHANGED_EVENT } from '$lib/stores/user';
+    import type { CurrentUser } from '$lib/types/user';
+
+    let currentUser = $state<CurrentUser | null>(null);
 
     const isActive = (path: string) => {
         if (path === '/') {
@@ -8,6 +12,24 @@
 
         return page.url.pathname.startsWith(path);
     };
+
+    $effect(() => {
+        currentUser = getCurrentUser();
+
+        const handleUserChanged = () => {
+            currentUser = getCurrentUser();
+        };
+
+        window.addEventListener(USER_CHANGED_EVENT, handleUserChanged);
+
+        return () => {
+            window.removeEventListener(USER_CHANGED_EVENT, handleUserChanged);
+        };
+    });
+
+    function handleLogout() {
+        clearCurrentUser();
+    }
 </script>
 
 <header class="app-header">
@@ -21,10 +43,17 @@
         <a class:active={isActive('/cohorts')} href="/cohorts">Когорты</a>
     </nav>
 
-    <div class="app-header__auth">
-        <a href="/login">Войти</a>
-        <a class="app-header__auth-link--accent" href="/register">Регистрация</a>
-    </div>
+    {#if currentUser}
+        <div class="app-header__user">
+            <span>{currentUser.fullName}</span>
+            <button type="button" onclick={handleLogout}>Выйти</button>
+        </div>
+    {:else}
+        <div class="app-header__auth">
+            <a href="/login">Войти</a>
+            <a class="app-header__auth-link--accent" href="/register">Регистрация</a>
+        </div>
+    {/if}
 </header>
 
 <style>
@@ -125,6 +154,38 @@
         color: #56bcd5 !important;
     }
 
+    .app-header__user {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+    }
+
+    .app-header__user span {
+        padding: 8px 12px;
+        border-radius: 999px;
+        background: rgba(217, 222, 242, 0.06);
+        color: #d9def2;
+        font-size: 13px;
+        font-weight: 800;
+    }
+
+    .app-header__user button {
+        min-height: 36px;
+        padding: 0 12px;
+        border: 1px solid rgba(217, 222, 242, 0.12);
+        border-radius: 10px;
+        background: transparent;
+        color: #9e9ec2;
+        font-size: 13px;
+        font-weight: 800;
+        cursor: pointer;
+    }
+
+    .app-header__user button:hover {
+        border-color: rgba(86, 188, 213, 0.32);
+        color: #d9def2;
+    }
+
     @media (max-width: 720px) {
         .app-header {
             align-items: flex-start;
@@ -136,8 +197,9 @@
             width: 100%;
         }
 
-    .app-header__auth {
-        display: none;
-    }
+        .app-header__auth,
+        .app-header__user {
+            width: 100%;
+        }
     }
 </style>

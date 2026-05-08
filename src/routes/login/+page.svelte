@@ -4,6 +4,7 @@
     import FormMessage from '$lib/components/ui/FormMessage.svelte';
     import Input from '$lib/components/ui/Input.svelte';
     import AuthCard from '$lib/components/auth/AuthCard.svelte';
+    import { getCurrentUser, saveCurrentUser } from '$lib/stores/user';
 
     let email = $state('');
     let password = $state('');
@@ -33,6 +34,14 @@
             messageType = 'error';
             return;
         }
+
+        const existingUser = getCurrentUser();
+
+        saveCurrentUser({
+            fullName: existingUser?.fullName ?? 'Иванов Иван Иванович',
+            email: normalizedEmail,
+            role: existingUser?.role ?? 'student'
+        });
 
         message = 'Вход выполнен успешно.';
         messageType = 'success';

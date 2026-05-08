@@ -14,7 +14,13 @@
     import InviteKeyPanel from '$lib/components/cohorts/InviteKeyPanel.svelte';
     import MemberCard from '$lib/components/cohorts/MemberCard.svelte';
     import { members } from '$lib/data/members';
+    import { issuedAchievements } from '$lib/data/issued-achievements';
+    import type { IssuedAchievement } from '$lib/types/issued-achievement';
+    import MemberAchievementsPanel from '$lib/components/achievements/MemberAchievementsPanel.svelte';
+    import EmptyState from '$lib/components/ui/EmptyState.svelte';
 
+    let visibleIssuedAchievements = $state<IssuedAchievement[]>([...issuedAchievements]);
+    let selectedMemberId = $state(members[0]?.id ?? null);
     let visibleAchievements = $state<Achievement[]>([...achievements]);
     let isCreateAchievementModalOpen = $state(false);
     let createAchievementMessage = $state('');
@@ -24,6 +30,37 @@
     const cohort = cohorts.find((item) => item.id === params.id) ?? cohorts[0];
 
     let inviteKey = $state(cohort.inviteKey);
+
+    function getMemberReceivedCount(memberId: string) {
+        return visibleIssuedAchievements.filter((item) => item.memberId === memberId).length;
+    }
+
+    function isAchievementIssued(memberId: string, achievementId: number) {
+        return visibleIssuedAchievements.some(
+            (item) => item.memberId === memberId && item.achievementId === achievementId
+        );
+    }
+
+    function issueAchievementToMember(memberId: string, achievementId: number) {
+        if (isAchievementIssued(memberId, achievementId)) {
+            return;
+        }
+
+        visibleIssuedAchievements = [
+            ...visibleIssuedAchievements,
+            {
+                memberId,
+                achievementId
+            }
+        ];
+
+        const member = members.find((item) => item.id === memberId);
+        const achievement = visibleAchievements.find((item) => item.id === achievementId);
+
+        if (member && achievement) {
+            issueAchievementMessage = `Достижение «${achievement.title}» выдано обучающемуся ${member.fullName}.`;
+        }
+    }
 
     function regenerateInviteKey() {
         inviteKey = `${cohort.id.toUpperCase()}-${Math.floor(1000 + Math.random() * 9000)}`;
@@ -43,9 +80,12 @@
         currentRole = getCurrentUserRole();
     });
 
+    let issueAchievementMessage = $state('');
+    let visibleMembers = $state([...members]);
+
     function handleCreateAchievement(
     achievementData: Omit<Achievement, 'id' | 'status' | 'rarity'>
-) {
+    ) {
     const newAchievement: Achievement = {
         id: Date.now(),
         ...achievementData,
@@ -57,7 +97,34 @@
     selectedAchievementId = newAchievement.id;
     createAchievementMessage = `Достижение «${newAchievement.title}» создано.`;
     isCreateAchievementModalOpen = false;
-}
+    }
+
+    let selectedMember = $derived(
+        visibleMembers.find((member) => member.id === selectedMemberId) ?? visibleMembers[0] ?? null
+    );
+
+    function handleIssueAchievement(memberId: string, achievementId: number) {
+        if (isAchievementIssued(memberId, achievementId)) {
+            return;
+        }
+
+        const member = visibleMembers.find((item) => item.id === memberId);
+        const achievement = visibleAchievements.find((item) => item.id === achievementId);
+
+        if (!member || !achievement) {
+            return;
+        }
+
+        visibleIssuedAchievements = [
+            ...visibleIssuedAchievements,
+            {
+                memberId,
+                achievementId
+            }
+        ];
+
+        issueAchievementMessage = `Достижение «${achievement.title}» выдано обучающемуся ${member.fullName}.`;
+    }
 </script>
 
 <svelte:head>
@@ -77,13 +144,15 @@
             </div>
 
             {#if currentRole === 'teacher'}
-                <Button
-                    onclick={() => {
-                        isCreateAchievementModalOpen = true;
-                    }}
-                >
-                    Создать достижение
-                </Button>
+                <div class="page-heading__actions">
+                    <Button
+                        onclick={() => {
+                            isCreateAchievementModalOpen = true;
+                        }}
+                    >
+                        Создать достижение
+                    </Button>
+                </div>
             {/if}
         </div>
 
@@ -122,6 +191,14 @@
             {/if}
         </div>
 
+        {#if issueAchievementMessage}
+            <div class="cohort-page__message">
+                <FormMessage type="success">
+                    {issueAchievementMessage}
+                </FormMessage>
+            </div>
+        {/if}
+
         {#if currentRole === 'teacher'}
             <section class="members-section">
                 <div class="section-heading">
@@ -129,11 +206,44 @@
                     <h2>Участники</h2>
                 </div>
 
-                <div class="members-grid">
-                    {#each members as member}
-                        <MemberCard {member} />
-                    {/each}
-                </div>
+                {#if visibleMembers.length > 0}
+                    <div class="members-grid">
+                        {#each visibleMembers as member}
+                            <MemberCard
+                                {member}
+                                receivedCount={getMemberReceivedCount(member.id)}
+                                totalCount={visibleAchievements.length}
+                                selected={member.id === selectedMemberId}
+                                onclick={() => {
+                                    selectedMemberId = member.id;
+                                }}
+                            />
+                        {/each}
+                    </div>
+
+                    {#if selectedMember}
+                        <MemberAchievementsPanel
+                            member={selectedMember}
+                            achievements={visibleAchievements}
+                            isIssued={isAchievementIssued}
+                            onissue={handleIssueAchievement}
+                        />
+                    {/if}
+                {:else}
+                    <EmptyState
+                        title="В когорте пока нет участников"
+                        text="После передачи ключа приглашения обучающиеся смогут присоединиться к когорте."
+                    />
+                {/if}
+
+                {#if selectedMember}
+                    <MemberAchievementsPanel
+                        member={selectedMember}
+                        achievements={visibleAchievements}
+                        isIssued={isAchievementIssued}
+                        onissue={handleIssueAchievement}
+                    />
+                {/if}
             </section>
         {/if}
 
@@ -151,22 +261,32 @@
                 <h2>Достижения когорты</h2>
             </div>
 
-            <div class="achievements-grid">
-                {#each visibleAchievements as achievement}
-                    <AchievementCard
-                        {achievement}
-                        selected={achievement.id === selectedAchievementId}
-                        onclick={() => {
-                            selectedAchievementId = achievement.id;
-                        }}
-                    />
-                {/each}
-            </div>
-        </section>
+            {#if visibleAchievements.length > 0}
+                <div class="achievements-grid">
+                    {#each visibleAchievements as achievement}
+                        <AchievementCard
+                            {achievement}
+                            selected={achievement.id === selectedAchievementId}
+                            onclick={() => {
+                                selectedAchievementId = achievement.id;
+                            }}
+                        />
+                    {/each}
+                </div>
 
-    {#if selectedAchievement}
-        <AchievementDetails achievement={selectedAchievement} />
-    {/if}
+                {#if selectedAchievement}
+                    <AchievementDetails achievement={selectedAchievement} />
+                {/if}
+            {:else}
+                <EmptyState
+                    title="Достижения ещё не созданы"
+                    text="Преподаватель может создать первое достижение для этой когорты."
+                />
+                {#if selectedAchievement}
+                    <AchievementDetails achievement={selectedAchievement} />
+                {/if}
+            {/if}
+        </section>
 
     </section>
 
@@ -180,6 +300,7 @@
             <CreateAchievementForm oncreated={handleCreateAchievement} />
         </Modal>
     {/if}
+
 </PageShell>
 
 <style>
@@ -311,6 +432,12 @@
         display: grid;
         grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
         gap: 16px;
+    }
+
+    .page-heading__actions {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 12px;
     }
 
     @media (max-width: 720px) {

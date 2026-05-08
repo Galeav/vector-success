@@ -1,10 +1,31 @@
 <script lang="ts">
     import type { Member } from '$lib/types/member';
 
-    let { member }: { member: Member } = $props();
+    let {
+        member,
+        receivedCount,
+        totalCount,
+        selected = false,
+        onclick
+    }: {
+        member: Member;
+        receivedCount: number;
+        totalCount: number;
+        selected?: boolean;
+        onclick?: () => void;
+    } = $props();
+
+    let progress = $derived(
+        totalCount > 0 ? Math.round((receivedCount / totalCount) * 100) : 0
+    );
 </script>
 
-<article class="member-card">
+<button
+    class="member-card"
+    class:member-card--selected={selected}
+    type="button"
+    {onclick}
+>
     <div class="member-card__avatar" aria-hidden="true">
         {member.fullName.slice(0, 1)}
     </div>
@@ -16,28 +37,50 @@
                 <p>{member.email}</p>
             </div>
 
-            <span>{member.progress}%</span>
+            <span>{progress}%</span>
         </div>
 
         <div class="member-card__bar" aria-hidden="true">
-            <span style:width={`${member.progress}%`}></span>
+            <span style:width={`${progress}%`}></span>
         </div>
 
         <div class="member-card__meta">
-            <span>{member.achievementsReceived} достижений получено</span>
+            <span>{receivedCount} из {totalCount} достижений получено</span>
         </div>
     </div>
-</article>
+</button>
 
 <style>
     .member-card {
         display: grid;
         grid-template-columns: 48px 1fr;
         gap: 14px;
+        width: 100%;
         padding: 16px;
         border: 1px solid rgba(217, 222, 242, 0.08);
         border-radius: 16px;
         background: #1d1f36;
+        color: inherit;
+        text-align: left;
+        transition:
+            transform 0.16s ease,
+            border-color 0.16s ease,
+            box-shadow 0.16s ease;
+    }
+
+    .member-card:hover {
+        transform: translateY(-2px);
+        border-color: rgba(86, 188, 213, 0.32);
+    }
+
+    .member-card:focus-visible {
+        outline: 3px solid rgba(86, 188, 213, 0.45);
+        outline-offset: 3px;
+    }
+
+    .member-card--selected {
+        border-color: rgba(86, 188, 213, 0.72);
+        box-shadow: 0 0 0 3px rgba(86, 188, 213, 0.12);
     }
 
     .member-card__avatar {
