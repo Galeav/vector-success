@@ -235,15 +235,6 @@
                         text="После передачи ключа приглашения обучающиеся смогут присоединиться к когорте."
                     />
                 {/if}
-
-                {#if selectedMember}
-                    <MemberAchievementsPanel
-                        member={selectedMember}
-                        achievements={visibleAchievements}
-                        isIssued={isAchievementIssued}
-                        onissue={handleIssueAchievement}
-                    />
-                {/if}
             </section>
         {/if}
 
