@@ -13,8 +13,7 @@
         min-height: 100vh;
         padding: 48px;
         background:
-            radial-gradient(circle at top right, rgba(86, 157, 219, 0.22), transparent 32%),
-            #0f1023;
+            radial-gradient(circle at top right, rgba(86, 157, 219, 0.22), transparent 32%), #0f1023;
     }
 
     .page-shell__inner {

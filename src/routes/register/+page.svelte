@@ -44,20 +44,20 @@
             return;
         }
 
-    saveCurrentUser({
-        fullName: normalizedFullName,
-        email: normalizedEmail,
-        role
-    });
+        saveCurrentUser({
+            fullName: normalizedFullName,
+            email: normalizedEmail,
+            role
+        });
 
-    message = `Пользователь «${normalizedFullName}» успешно зарегистрирован.`;
-    messageType = 'success';
+        message = `Пользователь «${normalizedFullName}» успешно зарегистрирован.`;
+        messageType = 'success';
 
-    fullName = '';
-    email = '';
-    password = '';
-    role = 'student';
-        }
+        fullName = '';
+        email = '';
+        password = '';
+        role = 'student';
+    }
 </script>
 
 <svelte:head>

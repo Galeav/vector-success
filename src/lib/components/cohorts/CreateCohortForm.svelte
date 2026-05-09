@@ -36,12 +36,7 @@
         </p>
     </div>
 
-    <Input
-        id="cohort-name"
-        bind:value={name}
-        placeholder="Введите название"
-        autocomplete="off"
-    />
+    <Input id="cohort-name" bind:value={name} placeholder="Введите название" autocomplete="off" />
 
     {#if message}
         <FormMessage type="error">

@@ -16,17 +16,8 @@
     }
 </script>
 
-<div
-    class="modal-backdrop"
-    role="presentation"
-    onclick={handleBackdropClick}
->
-    <div
-        class="modal"
-        role="dialog"
-        aria-modal="true"
-        aria-labelledby="modal-title"
-    >
+<div class="modal-backdrop" role="presentation" onclick={handleBackdropClick}>
+    <div class="modal" role="dialog" aria-modal="true" aria-labelledby="modal-title">
         <div class="modal__header">
             <h2 id="modal-title">{title}</h2>
 

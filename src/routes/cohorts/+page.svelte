@@ -39,44 +39,44 @@
     }
     /*Для проверки, пока бекэнд не подключен*/
     function createCohortId(name: string) {
-    return name
-        .trim()
-        .toLowerCase()
-        .replaceAll(' ', '-')
-        .replaceAll('ё', 'e')
-        .replaceAll('й', 'i')
-        .replaceAll('ц', 'c')
-        .replaceAll('у', 'u')
-        .replaceAll('к', 'k')
-        .replaceAll('е', 'e')
-        .replaceAll('н', 'n')
-        .replaceAll('г', 'g')
-        .replaceAll('ш', 'sh')
-        .replaceAll('щ', 'shch')
-        .replaceAll('з', 'z')
-        .replaceAll('х', 'h')
-        .replaceAll('ъ', '')
-        .replaceAll('ф', 'f')
-        .replaceAll('ы', 'y')
-        .replaceAll('в', 'v')
-        .replaceAll('а', 'a')
-        .replaceAll('п', 'p')
-        .replaceAll('р', 'r')
-        .replaceAll('о', 'o')
-        .replaceAll('л', 'l')
-        .replaceAll('д', 'd')
-        .replaceAll('ж', 'zh')
-        .replaceAll('э', 'e')
-        .replaceAll('я', 'ya')
-        .replaceAll('ч', 'ch')
-        .replaceAll('с', 's')
-        .replaceAll('м', 'm')
-        .replaceAll('и', 'i')
-        .replaceAll('т', 't')
-        .replaceAll('ь', '')
-        .replaceAll('б', 'b')
-        .replaceAll('ю', 'yu')
-        .replace(/[^a-z0-9-]/g, '');
+        return name
+            .trim()
+            .toLowerCase()
+            .replaceAll(' ', '-')
+            .replaceAll('ё', 'e')
+            .replaceAll('й', 'i')
+            .replaceAll('ц', 'c')
+            .replaceAll('у', 'u')
+            .replaceAll('к', 'k')
+            .replaceAll('е', 'e')
+            .replaceAll('н', 'n')
+            .replaceAll('г', 'g')
+            .replaceAll('ш', 'sh')
+            .replaceAll('щ', 'shch')
+            .replaceAll('з', 'z')
+            .replaceAll('х', 'h')
+            .replaceAll('ъ', '')
+            .replaceAll('ф', 'f')
+            .replaceAll('ы', 'y')
+            .replaceAll('в', 'v')
+            .replaceAll('а', 'a')
+            .replaceAll('п', 'p')
+            .replaceAll('р', 'r')
+            .replaceAll('о', 'o')
+            .replaceAll('л', 'l')
+            .replaceAll('д', 'd')
+            .replaceAll('ж', 'zh')
+            .replaceAll('э', 'e')
+            .replaceAll('я', 'ya')
+            .replaceAll('ч', 'ch')
+            .replaceAll('с', 's')
+            .replaceAll('м', 'm')
+            .replaceAll('и', 'i')
+            .replaceAll('т', 't')
+            .replaceAll('ь', '')
+            .replaceAll('б', 'b')
+            .replaceAll('ю', 'yu')
+            .replace(/[^a-z0-9-]/g, '');
     }
 
     function createInviteKey(name: string) {
@@ -84,7 +84,6 @@
 
         return `${prefix}-2026`;
     }
-
 </script>
 
 <svelte:head>
@@ -116,9 +115,15 @@
 
         <div class="role-info">
             {#if currentRole === 'teacher'}
-                <p>Вы работаете в режиме преподавателя: можете создавать когорты и управлять учебными достижениями.</p>
+                <p>
+                    Вы работаете в режиме преподавателя: можете создавать когорты и управлять
+                    учебными достижениями.
+                </p>
             {:else}
-                <p>Вы работаете в режиме обучающегося: можете присоединяться к когортам и отслеживать свои достижения.</p>
+                <p>
+                    Вы работаете в режиме обучающегося: можете присоединяться к когортам и
+                    отслеживать свои достижения.
+                </p>
             {/if}
         </div>
 
@@ -128,7 +133,7 @@
                     {createMessage}
                 </FormMessage>
             </div>
-        {/if}        
+        {/if}
 
         {#if currentRole === 'student'}
             <JoinCohortForm />
@@ -151,7 +156,6 @@
             <CreateCohortForm oncreated={handleCreateCohort} />
         </Modal>
     {/if}
-
 </PageShell>
 
 <style>

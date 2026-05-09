@@ -84,19 +84,19 @@
     let visibleMembers = $state([...members]);
 
     function handleCreateAchievement(
-    achievementData: Omit<Achievement, 'id' | 'status' | 'rarity'>
+        achievementData: Omit<Achievement, 'id' | 'status' | 'rarity'>
     ) {
-    const newAchievement: Achievement = {
-        id: Date.now(),
-        ...achievementData,
-        status: 'available',
-        rarity: 0
-    };
+        const newAchievement: Achievement = {
+            id: Date.now(),
+            ...achievementData,
+            status: 'available',
+            rarity: 0
+        };
 
-    visibleAchievements = [newAchievement, ...visibleAchievements];
-    selectedAchievementId = newAchievement.id;
-    createAchievementMessage = `Достижение «${newAchievement.title}» создано.`;
-    isCreateAchievementModalOpen = false;
+        visibleAchievements = [newAchievement, ...visibleAchievements];
+        selectedAchievementId = newAchievement.id;
+        createAchievementMessage = `Достижение «${newAchievement.title}» создано.`;
+        isCreateAchievementModalOpen = false;
     }
 
     let selectedMember = $derived(
@@ -174,7 +174,7 @@
         </div>
 
         {#if currentRole === 'teacher'}
-            <InviteKeyPanel inviteKey={inviteKey} onregenerate={regenerateInviteKey} />
+            <InviteKeyPanel {inviteKey} onregenerate={regenerateInviteKey} />
         {/if}
 
         <div class="role-info">
@@ -278,7 +278,6 @@
                 {/if}
             {/if}
         </section>
-
     </section>
 
     {#if isCreateAchievementModalOpen && currentRole === 'teacher'}
@@ -291,7 +290,6 @@
             <CreateAchievementForm oncreated={handleCreateAchievement} />
         </Modal>
     {/if}
-
 </PageShell>
 
 <style>

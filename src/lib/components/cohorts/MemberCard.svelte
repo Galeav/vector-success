@@ -15,17 +15,10 @@
         onclick?: () => void;
     } = $props();
 
-    let progress = $derived(
-        totalCount > 0 ? Math.round((receivedCount / totalCount) * 100) : 0
-    );
+    let progress = $derived(totalCount > 0 ? Math.round((receivedCount / totalCount) * 100) : 0);
 </script>
 
-<button
-    class="member-card"
-    class:member-card--selected={selected}
-    type="button"
-    {onclick}
->
+<button class="member-card" class:member-card--selected={selected} type="button" {onclick}>
     <div class="member-card__avatar" aria-hidden="true">
         {member.fullName.slice(0, 1)}
     </div>
