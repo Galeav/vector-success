@@ -327,7 +327,10 @@
                         isCreateAchievementModalOpen = false;
                     }}
                 >
-                    <CreateAchievementForm oncreated={handleCreateAchievement} />
+                    <CreateAchievementForm
+                        achievements={visibleAchievements}
+                        oncreated={handleCreateAchievement}
+                    />
                 </Modal>
             {/if}
         {:else}
