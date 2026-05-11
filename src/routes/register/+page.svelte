@@ -5,6 +5,7 @@
     import Input from '$lib/components/ui/Input.svelte';
     import AuthCard from '$lib/components/auth/AuthCard.svelte';
     import { registerUser } from '$lib/api/auth';
+    import { goto } from '$app/navigation';
 
     let fullName = $state('');
     let email = $state('');
@@ -44,20 +45,32 @@
             return;
         }
 
-        const user = await registerUser({
-            fullName: normalizedFullName,
-            email: normalizedEmail,
-            password,
-            role
-        });
+        try {
+            const user = await registerUser({
+                fullName: normalizedFullName,
+                email: normalizedEmail,
+                password,
+                role
+            });
 
-        message = `Пользователь «${user.fullName}» успешно зарегистрирован.`;
-        messageType = 'success';
+            message = `Пользователь «${user.fullName}» успешно зарегистрирован. Сейчас откроется страница входа.`;
+            messageType = 'success';
 
-        fullName = '';
-        email = '';
-        password = '';
-        role = 'student';
+            fullName = '';
+            email = '';
+            password = '';
+            role = 'student';
+
+            setTimeout(() => {
+                goto('/login');
+            }, 800);
+        } catch (error) {
+            message =
+                error instanceof Error
+                    ? error.message
+                    : 'Не удалось зарегистрировать пользователя.';
+            messageType = 'error';
+        }
     }
 </script>
 

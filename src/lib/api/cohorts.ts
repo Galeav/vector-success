@@ -1,43 +1,123 @@
-import { cohorts } from '$lib/data/cohorts';
-import { mapApiCohortToCohort } from '$lib/mappers/cohort';
+import { cohorts as baseCohorts } from '$lib/data/cohorts';
+import { addCurrentUserToCohort, getCurrentUserCohortIds } from '$lib/api/members';
+import { getCurrentUser } from '$lib/stores/user';
 import type { Cohort } from '$lib/types/cohort';
-import type { ApiCohort } from '$lib/types/api/cohort';
 
-export async function getCohorts(): Promise<Cohort[]> {
-    const apiCohorts: ApiCohort[] = cohorts.map((cohort) => ({
-        id: cohort.id,
-        name: cohort.name
-    }));
+const CREATED_COHORTS_STORAGE_KEY = 'vector-success-created-cohorts';
 
-    return apiCohorts.map(mapApiCohortToCohort);
+type CreatedCohort = Cohort & {
+    ownerEmail: string;
+};
+
+type CohortWithOwner = Cohort & {
+    ownerEmail?: string;
+};
+
+const baseCohortOwnerEmails: Record<string, string> = {
+    'math-6b': 'mifiria@yandex.ru',
+    'My-class': 'mifiria@yandex.ru',
+    'inform-11a': 'mifiria@yandex.ru'
+};
+
+export async function getCohorts(): Promise<CohortWithOwner[]> {
+    return [...getCreatedCohorts(), ...baseCohorts];
+}
+
+export async function getCurrentUserCohorts(): Promise<Cohort[]> {
+    const currentUser = getCurrentUser();
+
+    if (!currentUser) {
+        return [];
+    }
+
+    const currentUserEmail = currentUser.email.toLowerCase();
+    const cohorts = await getCohorts();
+
+    if (currentUser.role === 'teacher') {
+        return cohorts.filter((cohort) => {
+            const isBaseCohortOwner = baseCohortOwnerEmails[cohort.id] === currentUserEmail;
+            const isCreatedCohortOwner = cohort.ownerEmail?.toLowerCase() === currentUserEmail;
+
+            return isBaseCohortOwner || isCreatedCohortOwner;
+        });
+    }
+
+    const currentUserCohortIds = getCurrentUserCohortIds();
+
+    return cohorts.filter((cohort) => currentUserCohortIds.includes(cohort.id));
+}
+
+export async function getCohortById(id: string): Promise<Cohort | null> {
+    const cohorts = await getCurrentUserCohorts();
+
+    return cohorts.find((cohort) => cohort.id === id) ?? null;
 }
 
 export async function createCohort(name: string): Promise<Cohort> {
+    const currentUser = getCurrentUser();
     const id = createCohortId(name);
 
-    return {
+    const newCohort: CreatedCohort = {
         id,
         name,
-        description: 'Новая когорта для учёта и демонстрации учебных достижений.',
+        description: 'Когорта для учёта и демонстрации учебных достижений.',
         membersCount: 0,
         achievementsCount: 0,
         progress: 0,
-        inviteKey: createInviteKey(id)
+        inviteKey: createInviteKey(id),
+        ownerEmail: currentUser?.email.toLowerCase() ?? ''
     };
+
+    const createdCohorts = getCreatedCohorts();
+
+    saveCreatedCohorts([newCohort, ...createdCohorts]);
+
+    return newCohort;
 }
 
-export async function joinCohort(inviteKey: string): Promise<boolean> {
-    return inviteKey.trim().toUpperCase() === 'CLASS-6B-2026';
+export async function joinCohort(inviteKey: string): Promise<Cohort | null> {
+    const normalizedKey = inviteKey.trim().toUpperCase();
+    const cohorts = await getCohorts();
+
+    const cohort = cohorts.find((cohort) => cohort.inviteKey.toUpperCase() === normalizedKey);
+
+    if (!cohort) {
+        return null;
+    }
+
+    await addCurrentUserToCohort(cohort.id);
+
+    return cohort;
 }
 
 export async function regenerateCohortInviteKey(cohortId: string): Promise<string> {
     return `${cohortId.toUpperCase()}-${Math.floor(1000 + Math.random() * 9000)}`;
 }
 
-export async function getCohortById(id: string): Promise<Cohort | null> {
-    const cohorts = await getCohorts();
+function getCreatedCohorts(): CreatedCohort[] {
+    if (typeof localStorage === 'undefined') {
+        return [];
+    }
 
-    return cohorts.find((cohort) => cohort.id === id) ?? null;
+    const rawCohorts = localStorage.getItem(CREATED_COHORTS_STORAGE_KEY);
+
+    if (!rawCohorts) {
+        return [];
+    }
+
+    try {
+        return JSON.parse(rawCohorts) as CreatedCohort[];
+    } catch {
+        return [];
+    }
+}
+
+function saveCreatedCohorts(cohorts: CreatedCohort[]) {
+    if (typeof localStorage === 'undefined') {
+        return;
+    }
+
+    localStorage.setItem(CREATED_COHORTS_STORAGE_KEY, JSON.stringify(cohorts));
 }
 
 function createCohortId(name: string) {

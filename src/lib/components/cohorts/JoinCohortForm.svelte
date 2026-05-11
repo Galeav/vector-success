@@ -4,6 +4,12 @@
     import Input from '$lib/components/ui/Input.svelte';
     import { joinCohort } from '$lib/api/cohorts';
 
+    let {
+        onjoined
+    }: {
+        onjoined?: () => void;
+    } = $props();
+
     let inviteKey = $state('');
     let message = $state('');
     let messageType = $state<'success' | 'error' | ''>('');
@@ -19,17 +25,19 @@
             return;
         }
 
-        const isJoined = await joinCohort(normalizedKey);
+        const joinedCohort = await joinCohort(normalizedKey);
 
-        if (!isJoined) {
+        if (!joinedCohort) {
             message = 'Когорта с таким ключом не найдена.';
             messageType = 'error';
             return;
         }
 
-        message = 'Вы успешно присоединились к когорте.';
+        message = `Вы успешно присоединились к когорте «${joinedCohort.name}».`;
         messageType = 'success';
         inviteKey = '';
+
+        onjoined?.();
     }
 </script>
 

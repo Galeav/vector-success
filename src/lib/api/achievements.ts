@@ -8,8 +8,19 @@ import type { Achievement } from '$lib/types/achievement';
 import type { ApiAchievement } from '$lib/types/api/achievement';
 import type { IssuedAchievement } from '$lib/types/issued-achievement';
 
+const achievementCohortIds: Record<number, string> = {
+    1: 'math-6b',
+    2: 'math-6b',
+    3: 'math-6b',
+    4: 'math-6b'
+};
+
 export async function getAchievementsByCohort(cohortId: string): Promise<Achievement[]> {
-    const apiAchievements: ApiAchievement[] = achievements.map((achievement) => ({
+    const cohortAchievements = achievements.filter(
+        (achievement) => achievementCohortIds[achievement.id] === cohortId
+    );
+
+    const apiAchievements: ApiAchievement[] = cohortAchievements.map((achievement) => ({
         id: achievement.id,
         name: achievement.title,
         description: achievement.description,

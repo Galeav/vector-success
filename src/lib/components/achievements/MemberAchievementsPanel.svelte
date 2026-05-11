@@ -41,7 +41,10 @@
 
     <div class="member-achievements__list">
         {#each achievements as achievement}
-            <article class="achievement-row">
+            <article
+                class="achievement-row"
+                class:achievement-row--not-issued={!isIssued(member.id, achievement.id)}
+            >
                 <div class="achievement-row__icon" aria-hidden="true">
                     <img src={achievement.icon} alt="" />
                 </div>
@@ -148,6 +151,17 @@
         border: 1px solid rgba(217, 222, 242, 0.08);
         border-radius: 14px;
         background: #1b1d36;
+    }
+
+    .achievement-row--not-issued {
+        border-color: rgba(217, 222, 242, 0.05);
+        background: rgba(217, 222, 242, 0.035);
+    }
+
+    .achievement-row--not-issued .achievement-row__icon,
+    .achievement-row--not-issued .achievement-row__content {
+        opacity: 0.48;
+        filter: grayscale(0.9);
     }
 
     .achievement-row__icon {

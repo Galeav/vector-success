@@ -10,7 +10,7 @@ export function mapApiAchievementToAchievement(apiAchievement: ApiAchievement): 
         icon: apiAchievement.icon_link,
         status: 'available',
         rarity: 0,
-        dependencies: []
+        dependencies: getDependencies(apiAchievement)
     };
 }
 
@@ -40,4 +40,16 @@ function getConditionText(apiAchievement: ApiAchievement) {
     }
 
     return 'Условие получения будет определено преподавателем.';
+}
+
+function getDependencies(apiAchievement: ApiAchievement) {
+    const dependencies = apiAchievement.condition_payload?.dependencies;
+
+    if (Array.isArray(dependencies)) {
+        return dependencies.filter(
+            (dependency): dependency is string => typeof dependency === 'string'
+        );
+    }
+
+    return [];
 }

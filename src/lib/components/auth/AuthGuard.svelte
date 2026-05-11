@@ -3,6 +3,10 @@
     import { browser } from '$app/environment';
     import { getCurrentUser } from '$lib/stores/user';
 
+    let { children } = $props();
+
+    let isChecking = $state(true);
+
     $effect(() => {
         if (!browser) {
             return;
@@ -10,15 +14,15 @@
 
         const currentUser = getCurrentUser();
 
-        if (currentUser) {
-            goto('/cohorts');
-        } else {
+        if (!currentUser) {
             goto('/login');
+            return;
         }
+
+        isChecking = false;
     });
 </script>
 
-<svelte:head>
-    <title>Вектор успеха</title>
-    <meta name="description" content="Система учёта и демонстрации учебных достижений" />
-</svelte:head>
+{#if !isChecking}
+    {@render children()}
+{/if}

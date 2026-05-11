@@ -1,6 +1,7 @@
 <script lang="ts">
     import { clearCurrentUser, getCurrentUser, USER_CHANGED_EVENT } from '$lib/stores/user';
     import type { CurrentUser } from '$lib/types/user';
+    import { goto } from '$app/navigation';
 
     let currentUser = $state<CurrentUser | null>(null);
 
@@ -18,8 +19,9 @@
         };
     });
 
-    function handleLogout() {
+    async function handleLogout() {
         clearCurrentUser();
+        await goto('/login');
     }
 </script>
 

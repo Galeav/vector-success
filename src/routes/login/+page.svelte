@@ -5,6 +5,7 @@
     import Input from '$lib/components/ui/Input.svelte';
     import AuthCard from '$lib/components/auth/AuthCard.svelte';
     import { loginUser } from '$lib/api/auth';
+    import { goto } from '$app/navigation';
 
     let email = $state('');
     let password = $state('');
@@ -35,16 +36,25 @@
             return;
         }
 
-        await loginUser({
-            email: normalizedEmail,
-            password
-        });
+        try {
+            await loginUser({
+                email: normalizedEmail,
+                password
+            });
 
-        message = 'Вход выполнен успешно.';
-        messageType = 'success';
+            message = 'Вход выполнен успешно. Сейчас откроется список когорт.';
+            messageType = 'success';
 
-        email = '';
-        password = '';
+            email = '';
+            password = '';
+
+            setTimeout(() => {
+                goto('/cohorts');
+            }, 600);
+        } catch (error) {
+            message = error instanceof Error ? error.message : 'Не удалось выполнить вход.';
+            messageType = 'error';
+        }
     }
 </script>
 
