@@ -2,14 +2,13 @@
     import Button from '$lib/components/ui/Button.svelte';
     import FormMessage from '$lib/components/ui/FormMessage.svelte';
     import Input from '$lib/components/ui/Input.svelte';
+    import { joinCohort } from '$lib/api/cohorts';
 
     let inviteKey = $state('');
     let message = $state('');
     let messageType = $state<'success' | 'error' | ''>('');
 
-    const DEMO_KEY = 'CLASS-6B-2026';
-
-    function handleSubmit(event: SubmitEvent) {
+    async function handleSubmit(event: SubmitEvent) {
         event.preventDefault();
 
         const normalizedKey = inviteKey.trim().toUpperCase();
@@ -20,7 +19,9 @@
             return;
         }
 
-        if (normalizedKey !== DEMO_KEY) {
+        const isJoined = await joinCohort(normalizedKey);
+
+        if (!isJoined) {
             message = 'Когорта с таким ключом не найдена.';
             messageType = 'error';
             return;

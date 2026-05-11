@@ -40,7 +40,9 @@ export async function createAchievement(
     return mapApiAchievementToAchievement(apiAchievement);
 }
 
-export async function getIssuedAchievementsByCohort(): Promise<IssuedAchievement[]> {
+export async function getIssuedAchievementsByCohort(
+    _cohortId: string
+): Promise<IssuedAchievement[]> {
     return [...issuedAchievements];
 }
 

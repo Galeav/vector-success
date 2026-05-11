@@ -23,6 +23,7 @@
     import type { IssuedAchievement } from '$lib/types/issued-achievement';
     import type { UserRole } from '$lib/types/user';
     import type { Member } from '$lib/types/member';
+    import { regenerateCohortInviteKey } from '$lib/api/cohorts';
 
     let { params } = $props();
 
@@ -51,6 +52,18 @@
         visibleMembers.find((member) => member.id === selectedMemberId) ?? visibleMembers[0] ?? null
     );
 
+    let membersCount = $derived(visibleMembers.length);
+
+    let achievementsCount = $derived(visibleAchievements.length);
+
+    let cohortProgress = $derived(
+        membersCount > 0 && achievementsCount > 0
+            ? Math.round(
+                  (visibleIssuedAchievements.length / (membersCount * achievementsCount)) * 100
+              )
+            : 0
+    );
+
     $effect(() => {
         currentRole = getCurrentUserRole();
     });
@@ -65,7 +78,7 @@
             selectedAchievementId = loadedAchievements[0]?.id ?? null;
         });
 
-        getIssuedAchievementsByCohort().then((loadedIssuedAchievements) => {
+        getIssuedAchievementsByCohort(cohort.id).then((loadedIssuedAchievements) => {
             visibleIssuedAchievements = loadedIssuedAchievements;
         });
 
@@ -85,12 +98,12 @@
         );
     }
 
-    function regenerateInviteKey() {
+    async function regenerateInviteKey() {
         if (!cohort) {
             return;
         }
 
-        inviteKey = `${cohort.id.toUpperCase()}-${Math.floor(1000 + Math.random() * 9000)}`;
+        inviteKey = await regenerateCohortInviteKey(cohort.id);
     }
 
     async function handleCreateAchievement(
@@ -160,17 +173,17 @@
 
             <div class="stats">
                 <div class="stats__item">
-                    <span>{cohort.membersCount}</span>
+                    <span>{membersCount}</span>
                     <p>участников</p>
                 </div>
 
                 <div class="stats__item">
-                    <span>{cohort.achievementsCount}</span>
+                    <span>{achievementsCount}</span>
                     <p>достижений</p>
                 </div>
 
                 <div class="stats__item">
-                    <span>{cohort.progress}%</span>
+                    <span>{cohortProgress}%</span>
                     <p>прогресс</p>
                 </div>
             </div>

@@ -26,7 +26,7 @@ export const achievements: Achievement[] = [
         id: 3,
         title: 'Читер!!!',
         description: 'Пойман на уроке с мини-калькулятором',
-        condition: 'Попосться с поличным при использовании мини-калькулятора на уроке!',
+        condition: 'Попасться с поличным при использовании мини-калькулятора на уроке!',
         icon: '/achievements/calculator.svg',
         status: 'available',
         rarity: 15,

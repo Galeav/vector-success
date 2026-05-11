@@ -34,6 +34,12 @@ export async function regenerateCohortInviteKey(cohortId: string): Promise<strin
     return `${cohortId.toUpperCase()}-${Math.floor(1000 + Math.random() * 9000)}`;
 }
 
+export async function getCohortById(id: string): Promise<Cohort | null> {
+    const cohorts = await getCohorts();
+
+    return cohorts.find((cohort) => cohort.id === id) ?? null;
+}
+
 function createCohortId(name: string) {
     return name
         .trim()

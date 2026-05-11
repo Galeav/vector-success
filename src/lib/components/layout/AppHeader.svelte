@@ -1,17 +1,8 @@
 <script lang="ts">
-    import { page } from '$app/state';
     import { clearCurrentUser, getCurrentUser, USER_CHANGED_EVENT } from '$lib/stores/user';
     import type { CurrentUser } from '$lib/types/user';
 
     let currentUser = $state<CurrentUser | null>(null);
-
-    const isActive = (path: string) => {
-        if (path === '/') {
-            return page.url.pathname === '/';
-        }
-
-        return page.url.pathname.startsWith(path);
-    };
 
     $effect(() => {
         currentUser = getCurrentUser();
@@ -33,15 +24,14 @@
 </script>
 
 <header class="app-header">
-    <a class="app-header__brand" href="/">
+    <a class="app-header__brand" href="/cohorts">
         <span class="app-header__logo">ВУ</span>
         <span>Вектор успеха</span>
     </a>
-
-    <nav class="app-header__nav" aria-label="Основная навигация">
-        <a class:active={isActive('/')} href="/">Главная</a>
+    <!--Оставил, как изначальную идею о нескольких страницах для расширения функциональности-->
+    <!--<nav class="app-header__nav" aria-label="Основная навигация">
         <a class:active={isActive('/cohorts')} href="/cohorts">Когорты</a>
-    </nav>
+    </nav>-->
 
     {#if currentUser}
         <div class="app-header__user">
@@ -88,7 +78,7 @@
         font-size: 13px;
         font-weight: 800;
     }
-
+    /*
     .app-header__nav {
         display: flex;
         align-items: center;
@@ -115,8 +105,8 @@
         background: rgba(86, 188, 213, 0.12);
         color: #56bcd5;
     }
+    */
 
-    .app-header__nav a:focus-visible,
     .app-header__brand:focus-visible {
         outline: 3px solid rgba(86, 188, 213, 0.45);
         outline-offset: 3px;
@@ -192,10 +182,11 @@
             flex-direction: column;
             padding: 20px 24px;
         }
-
+        /*
         .app-header__nav {
             width: 100%;
         }
+        */
 
         .app-header__auth,
         .app-header__user {
