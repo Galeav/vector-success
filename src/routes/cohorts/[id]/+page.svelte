@@ -17,11 +17,12 @@
     import FormMessage from '$lib/components/ui/FormMessage.svelte';
     import Modal from '$lib/components/ui/Modal.svelte';
     import { cohorts } from '$lib/data/cohorts';
-    import { members } from '$lib/data/members';
+    import { getCohortMembers } from '$lib/api/members';
     import { getCurrentUserRole } from '$lib/stores/user';
     import type { Achievement } from '$lib/types/achievement';
     import type { IssuedAchievement } from '$lib/types/issued-achievement';
     import type { UserRole } from '$lib/types/user';
+    import type { Member } from '$lib/types/member';
 
     let { params } = $props();
 
@@ -29,10 +30,10 @@
 
     let visibleAchievements = $state<Achievement[]>([]);
     let visibleIssuedAchievements = $state<IssuedAchievement[]>([]);
-    let visibleMembers = $state([...members]);
+    let visibleMembers = $state<Member[]>([]);
 
     let selectedAchievementId = $state<number | null>(null);
-    let selectedMemberId = $state(members[0]?.id ?? null);
+    let selectedMemberId = $state<string | null>(null);
 
     let isCreateAchievementModalOpen = $state(false);
     let createAchievementMessage = $state('');
@@ -66,6 +67,11 @@
 
         getIssuedAchievementsByCohort().then((loadedIssuedAchievements) => {
             visibleIssuedAchievements = loadedIssuedAchievements;
+        });
+
+        getCohortMembers(cohort.id).then((loadedMembers) => {
+            visibleMembers = loadedMembers;
+            selectedMemberId = loadedMembers[0]?.id ?? null;
         });
     });
 

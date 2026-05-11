@@ -4,7 +4,7 @@
     import FormMessage from '$lib/components/ui/FormMessage.svelte';
     import Input from '$lib/components/ui/Input.svelte';
     import AuthCard from '$lib/components/auth/AuthCard.svelte';
-    import { getCurrentUser, saveCurrentUser } from '$lib/stores/user';
+    import { loginUser } from '$lib/api/auth';
 
     let email = $state('');
     let password = $state('');
@@ -12,7 +12,7 @@
     let message = $state('');
     let messageType = $state<'success' | 'error' | ''>('');
 
-    function handleSubmit(event: SubmitEvent) {
+    async function handleSubmit(event: SubmitEvent) {
         event.preventDefault();
 
         const normalizedEmail = email.trim();
@@ -35,12 +35,9 @@
             return;
         }
 
-        const existingUser = getCurrentUser();
-
-        saveCurrentUser({
-            fullName: existingUser?.fullName ?? 'Иванов Иван Иванович',
+        await loginUser({
             email: normalizedEmail,
-            role: existingUser?.role ?? 'student'
+            password
         });
 
         message = 'Вход выполнен успешно.';

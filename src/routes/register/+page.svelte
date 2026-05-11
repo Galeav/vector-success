@@ -4,7 +4,7 @@
     import FormMessage from '$lib/components/ui/FormMessage.svelte';
     import Input from '$lib/components/ui/Input.svelte';
     import AuthCard from '$lib/components/auth/AuthCard.svelte';
-    import { saveCurrentUser } from '$lib/stores/user';
+    import { registerUser } from '$lib/api/auth';
 
     let fullName = $state('');
     let email = $state('');
@@ -14,7 +14,7 @@
     let message = $state('');
     let messageType = $state<'success' | 'error' | ''>('');
 
-    function handleSubmit(event: SubmitEvent) {
+    async function handleSubmit(event: SubmitEvent) {
         event.preventDefault();
 
         const normalizedFullName = fullName.trim();
@@ -44,13 +44,14 @@
             return;
         }
 
-        saveCurrentUser({
+        const user = await registerUser({
             fullName: normalizedFullName,
             email: normalizedEmail,
+            password,
             role
         });
 
-        message = `Пользователь «${normalizedFullName}» успешно зарегистрирован.`;
+        message = `Пользователь «${user.fullName}» успешно зарегистрирован.`;
         messageType = 'success';
 
         fullName = '';
