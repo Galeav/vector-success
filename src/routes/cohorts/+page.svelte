@@ -2,7 +2,7 @@
     import CohortCard from '$lib/components/cohorts/CohortCard.svelte';
     import PageShell from '$lib/components/layout/PageShell.svelte';
     import Button from '$lib/components/ui/Button.svelte';
-    import { cohorts } from '$lib/data/cohorts';
+    import { createCohort, getCohorts } from '$lib/api/cohorts';
     import JoinCohortForm from '$lib/components/cohorts/JoinCohortForm.svelte';
     import CreateCohortForm from '$lib/components/cohorts/CreateCohortForm.svelte';
     import Modal from '$lib/components/ui/Modal.svelte';
@@ -20,69 +20,20 @@
     let isCreateModalOpen = $state(false);
     let createMessage = $state('');
 
-    let visibleCohorts = $state<Cohort[]>([...cohorts]);
+    let visibleCohorts = $state<Cohort[]>([]);
 
-    function handleCreateCohort(name: string) {
-        const newCohort: Cohort = {
-            id: createCohortId(name),
-            name,
-            description: 'Новая когорта для учёта и демонстрации учебных достижений.',
-            membersCount: 0,
-            achievementsCount: 0,
-            progress: 0,
-            inviteKey: createInviteKey(name)
-        };
+    $effect(() => {
+        getCohorts().then((loadedCohorts) => {
+            visibleCohorts = loadedCohorts;
+        });
+    });
+
+    async function handleCreateCohort(name: string) {
+        const newCohort = await createCohort(name);
 
         visibleCohorts = [newCohort, ...visibleCohorts];
         createMessage = `Когорта «${name}» создана.`;
         isCreateModalOpen = false;
-    }
-    /*Для проверки, пока бекэнд не подключен*/
-    function createCohortId(name: string) {
-        return name
-            .trim()
-            .toLowerCase()
-            .replaceAll(' ', '-')
-            .replaceAll('ё', 'e')
-            .replaceAll('й', 'i')
-            .replaceAll('ц', 'c')
-            .replaceAll('у', 'u')
-            .replaceAll('к', 'k')
-            .replaceAll('е', 'e')
-            .replaceAll('н', 'n')
-            .replaceAll('г', 'g')
-            .replaceAll('ш', 'sh')
-            .replaceAll('щ', 'shch')
-            .replaceAll('з', 'z')
-            .replaceAll('х', 'h')
-            .replaceAll('ъ', '')
-            .replaceAll('ф', 'f')
-            .replaceAll('ы', 'y')
-            .replaceAll('в', 'v')
-            .replaceAll('а', 'a')
-            .replaceAll('п', 'p')
-            .replaceAll('р', 'r')
-            .replaceAll('о', 'o')
-            .replaceAll('л', 'l')
-            .replaceAll('д', 'd')
-            .replaceAll('ж', 'zh')
-            .replaceAll('э', 'e')
-            .replaceAll('я', 'ya')
-            .replaceAll('ч', 'ch')
-            .replaceAll('с', 's')
-            .replaceAll('м', 'm')
-            .replaceAll('и', 'i')
-            .replaceAll('т', 't')
-            .replaceAll('ь', '')
-            .replaceAll('б', 'b')
-            .replaceAll('ю', 'yu')
-            .replace(/[^a-z0-9-]/g, '');
-    }
-
-    function createInviteKey(name: string) {
-        const prefix = createCohortId(name).slice(0, 8).toUpperCase();
-
-        return `${prefix}-2026`;
     }
 </script>
 
